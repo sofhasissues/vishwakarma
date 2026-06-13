@@ -1,0 +1,83 @@
+{
+  "family": "vishwakarma-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::435627632547:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "vishwakarma-api",
+      "image": "435627632547.dkr.ecr.ap-south-1.amazonaws.com/vishwakarma-api:latest",
+      "command": ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"],
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DATABASE_URL",
+          "value": "postgresql+asyncpg://vishwakarma:vishwakarma_prod_2026@vishwakarma-db.c1weqeuwq7sx.ap-south-1.rds.amazonaws.com:5432/vishwakarma_db"
+        },
+        {
+          "name": "REDIS_URL",
+          "value": "redis://PASTE_REDIS_ENDPOINT:6379/0"
+        },
+        {
+          "name": "ENVIRONMENT",
+          "value": "production"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "ap-south-1"
+        },
+        {
+          "name": "S3_BUCKET",
+          "value": "vishwakarma-resumes"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "GROQ_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:GROQ_API_KEY::"
+        },
+        {
+          "name": "GEMINI_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:GEMINI_API_KEY::"
+        },
+        {
+          "name": "DEEPGRAM_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:DEEPGRAM_API_KEY::"
+        },
+        {
+          "name": "DID_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:DID_API_KEY::"
+        },
+        {
+          "name": "NEXTAUTH_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:NEXTAUTH_SECRET::"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:AWS_ACCESS_KEY_ID::"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "valueFrom": "arn:aws:secretsmanager:ap-south-1:435627632547:secret:vishwakarma/prod-WaauA7:AWS_SECRET_ACCESS_KEY::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/vishwakarma-api",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
