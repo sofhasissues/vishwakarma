@@ -9,3 +9,14 @@ dist/
 .vercel
 .env*.local
 secrets.json
+
+# Large binaries — should never be in git
+awscliv2.zip
+cloudflared-linux-amd64.deb
+*.zip
+*.deb
+
+# AWS/ECS leftovers
+aws/
+cf_extracted/
+"ecs update-service*"
